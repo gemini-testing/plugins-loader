@@ -1,0 +1,28 @@
+{
+  "name": "plugins-loader",
+  "version": "1.0.0",
+  "description": "Plugins loader",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:gemini-testing/plugins-loader.git"
+  },
+  "main": "lib/index.js",
+  "scripts": {
+    "lint": "eslint .",
+    "test": "npm run lint && npm run unit",
+    "unit": "mocha test"
+  },
+  "author": "Evgeniy Gavryushin <job.egavr@yandex.ru>",
+  "license": "MIT",
+  "dependencies": {
+    "lodash": "^4.16.4"
+  },
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "eslint": "^3.8.0",
+    "eslint-config-gemini-testing": "^2.3.0",
+    "mocha": "^3.1.2",
+    "proxyquire": "^1.7.10",
+    "sinon": "^1.17.6"
+  }
+}
