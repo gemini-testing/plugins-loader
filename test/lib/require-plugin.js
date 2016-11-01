@@ -10,45 +10,75 @@ describe('require-plugin', () => {
 
     afterEach(() => sandbox.restore());
 
-    it('should require plugin', () => {
-        utils.require.withArgs('some-plugin').returns(() => true);
+    it('should require a plugin which starts with prefix', () => {
+        utils.require.withArgs('prefix-some-plugin').returns(() => true);
 
-        assert.isTrue(requirePlugin('some-plugin')());
+        assert.isTrue(requirePlugin('prefix-some-plugin', 'prefix-')());
     });
 
-    it('should throw if plugin contains an error', () => {
+    it('should throw if a plugin which starts with prefix contains an error', () => {
         const error = new Error();
 
-        utils.require.withArgs('some-plugin').throws(error);
+        utils.require.withArgs('prefix-some-plugin').throws(error);
 
-        assert.throws(() => requirePlugin('some-plugin'), error);
+        assert.throws(() => requirePlugin('prefix-some-plugin', 'prefix-'), error);
     });
 
-    it('should require plugin with prefix', () => {
+    it('should throw if a plugin which starts with prefix was not found', () => {
         utils.require
-            .withArgs('some-plugin').throws(new Error('Error: Cannot find module \'some-plugin\''))
-            .withArgs('prefix-some-plugin').returns(() => true);
+            .withArgs('prefix-some-plugin')
+            .throws(new Error('Error: Cannot find module \'prefix-some-plugin\''));
 
+        assert.throws(() => requirePlugin('prefix-some-plugin', 'prefix'),
+            'Cannot find module \'prefix-some-plugin\'');
+    });
+
+    it('should require a plugin which does not start with prefix', () => {
+        utils.require.withArgs('prefix-some-plugin').returns(() => true);
 
         assert.isTrue(requirePlugin('some-plugin', 'prefix-')());
     });
 
-    it('should throw if plugin with prefix contains an error', () => {
+    it('should throw if a plugin which does not start with prefix contains an error', () => {
         const error = new Error();
 
-        utils.require
-            .withArgs('some-plugin').throws(new Error('Error: Cannot find module \'some-plugin\''))
-            .withArgs('prefix-some-plugin').throws(error);
+        utils.require.withArgs('prefix-some-plugin').throws(error);
 
         assert.throws(() => requirePlugin('some-plugin', 'prefix-'), error);
     });
 
-    it('should throw if plugin does not exist', () => {
+    it('should require a plugin without prefix', () => {
         utils.require
-            .withArgs('some-plugin').throws(new Error('Error: Cannot find module \'some-plugin\''))
-            .withArgs('prefix-some-plugin').throws(new Error('Error: Cannot find module \'prefix-some-plugin\''));
+            .withArgs('prefix-some-plugin')
+            .throws(new Error('Cannot find module \'prefix-some-plugin\''));
+
+        utils.require.withArgs('some-plugin').returns(() => true);
+
+        assert.isTrue(requirePlugin('some-plugin', 'prefix-')());
+    });
+
+    it('should throw if a plugin without prefix contains an error', () => {
+        const error = new Error();
+
+        utils.require
+            .withArgs('prefix-some-plugin')
+            .throws(new Error('Cannot find module \'prefix-some-plugin\''));
+
+        utils.require.withArgs('some-plugin').throws(error);
+
+        assert.throws(() => requirePlugin('some-plugin', 'prefix-'), error);
+    });
+
+    it('should throw if a plugin with prefix and a plugin without prefix were not found', () => {
+        utils.require
+            .withArgs('prefix-some-plugin')
+            .throws(new Error('Cannot find module \'prefix-some-plugin\''));
+
+        utils.require
+            .withArgs('some-plugin')
+            .throws(new Error('Cannot find module \'some-plugin\''));
 
         assert.throws(() => requirePlugin('some-plugin', 'prefix-'),
-            'Can not find module \'some-plugin\' or \'prefix-some-plugin\'');
+            'Cannot find module \'some-plugin\' or \'prefix-some-plugin\'');
     });
 });
