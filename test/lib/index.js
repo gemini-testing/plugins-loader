@@ -40,5 +40,16 @@ describe('plugins-loader', () => {
             assert.calledOnce(pluginFn);
             assert.calledWith(pluginFn, 'some-tool');
         });
+
+        it('should return what plugins return', () => {
+            const pluginFoo = () => 'foo';
+            const pluginBar = () => ({bar: 'baz'});
+
+            Loader.prototype.load.returns([pluginFoo, pluginBar]);
+
+            const result = pluginsLoader.load();
+
+            assert.deepEqual(result, ['foo', {bar: 'baz'}]);
+        });
     });
 });
