@@ -7,6 +7,7 @@
     "url": "git@github.com:gemini-testing/plugins-loader.git"
   },
   "main": "lib/index.js",
+  "typings": "typings/index.d.ts",
   "scripts": {
     "lint": "eslint .",
     "test": "npm run lint && npm run unit",
