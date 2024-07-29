@@ -55,6 +55,7 @@ describe('require-plugin', () => {
             it('should require a plugin without prefix', () => {
                 const pluginName = 'prefix-some-plugin';
                 const error = mkError(pluginName);
+                error.code = 'MODULE_NOT_FOUND';
 
                 utils.require.withArgs(pluginName).throws(error);
                 utils.require.withArgs('some-plugin').returns(() => true);
@@ -65,6 +66,7 @@ describe('require-plugin', () => {
             it('should throw if a plugin without prefix contains an error', () => {
                 const pluginName = 'prefix-some-plugin';
                 const errorWithPrefix = mkError(pluginName);
+                errorWithPrefix.code = 'MODULE_NOT_FOUND';
                 const errorWithouPrefix = new Error();
 
                 utils.require.withArgs(pluginName).throws(errorWithPrefix);
@@ -76,9 +78,11 @@ describe('require-plugin', () => {
             it('should throw if a plugin with prefix and a plugin without prefix were not found', () => {
                 const pluginNameWithPrefix = 'prefix-some-plugin';
                 const errorWithPrefix = mkError(pluginNameWithPrefix);
+                errorWithPrefix.code = 'MODULE_NOT_FOUND';
 
                 const pluginNameWithoutPrefix = 'some-plugin';
                 const errorWithoutPrefix = mkError(pluginNameWithoutPrefix);
+                errorWithoutPrefix.code = 'MODULE_NOT_FOUND';
 
                 utils.require
                     .withArgs(pluginNameWithPrefix)
