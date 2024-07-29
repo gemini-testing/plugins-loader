@@ -1,6 +1,6 @@
 {
   "name": "plugins-loader",
-  "version": "1.3.2",
+  "version": "1.3.3",
   "description": "Plugins loader",
   "repository": {
     "type": "git",
